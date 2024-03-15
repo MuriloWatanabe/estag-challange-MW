@@ -54,7 +54,6 @@
                 </thead>
                 <tbody id="productList"></tbody>
             </table>
-
             <div>
                 <label>Total: <input type="number" disabled value="" id="totalInput"></label>
             </div>
@@ -69,6 +68,7 @@
             </div>
         </div>
         <script>
+
 
 
             document.addEventListener('DOMContentLoaded', function () {
@@ -136,10 +136,20 @@
                 const Pptc = document.getElementById("select-p").value;
                 const Nproduct = JSON.parse(Pptc);
 
+                const cartI = JSON.parse(localStorage.getItem("cart")) || [];
+                const existingProductIndex = cartI.findIndex(item => item.Nproduct.product === Nproduct.product);
+
+if (existingProductIndex !== -1) {
+    alert("This product is already in the cart.");
+    return;
+};
+
                 if (parseInt(amount) > Nproduct.amount) {
                     alert("Selected quantity exceeds available quantity of the product.");
                     return;
-                }
+                }  ;
+       
+    
 
 
 
@@ -155,19 +165,6 @@
                 renderItem(cartItem);
                 calculateTotal();
                 getTotalTax();
-            }
-
-            function updateAmountHome(){
-                let products = fetch(`http://localhost/routes/product.php`, {
-                    method: "POST",
-                    body: data,
-                });
-                products.forEach(product => {
-                    if (product.product === Nproduct.product) {
-                        product.amount -= amount;
-                    }
-                });
-
             }
 
             function renderItem(item) {
@@ -277,11 +274,13 @@
 
             }
 
-
-
             function finishOrder() {
-                order_item()
-                updateAmountHome()
+                order_item();
+
+                setTimeout(() => {
+                    localStorage.removeItem('cart')    
+                }, 300 ); 
+                
             }
         </script>
 

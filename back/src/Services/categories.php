@@ -2,7 +2,9 @@
 include '../index.php';
 
 function postCategory($name, $tax){
-$categoryPost = myPDO->prepare("INSERT INTO categories (name, tax ) VALUES ('{$name}', '{$tax}')");
+$categoryPost = myPDO->prepare("INSERT INTO categories (name, tax ) VALUES ( :name, :tax )");
+$categoryPost->bindParam(":name", $name);
+$categoryPost->bindParam(":tax", $tax);
 $categoryPost->execute();
 return 'categoria criada';
 }

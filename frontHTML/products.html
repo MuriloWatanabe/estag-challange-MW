@@ -20,7 +20,7 @@
 
 <body>
     <main>
-        <form form onsubmit="postProd(event)" id="prodForm">
+        <form onsubmit="postProd(event)" id="prodForm">
             <div class="ProductAdd">
                 <div class="Product">
                     <input type="text" maxlength="30" placeholder="Product Name" id="product2" name="productN"
@@ -62,7 +62,7 @@ async function postProd(event){
             method: 'POST',
             body: prod
         },
-        // window.location.reload()
+        window.location.reload()
         )
 }
 

@@ -2,7 +2,10 @@
 include "../index.php";
 
 function postOrder($code, $total, $tax){
-    $orderPost = myPDO->prepare("INSERT INTO orders ( code, total, tax) VALUES ({$code}, {$total}, {$tax})");
+    $orderPost = myPDO->prepare("INSERT INTO orders ( code, total, tax) VALUES (:code, :total, :tax)");
+    $orderPost-> bindParam(":code", $code);
+    $orderPost-> bindParam(":total", $total);
+    $orderPost-> bindParam(":tax", $tax);
     $orderPost->execute();
     return array("code" => $code);
     };
