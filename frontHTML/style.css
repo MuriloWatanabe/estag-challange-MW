@@ -1,0 +1,296 @@
+
+html {
+   height: 100%;
+}
+
+body {
+   margin: 0;
+   padding: 0;
+   height: 100%;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+   background-color: mediumslateblue;
+   color: white;
+   padding: 5px 50px;
+   top: 0;
+   max-width: 100%;
+   z-index: 1000
+}
+
+header a {
+   text-decoration: none;
+   color: white;
+}
+
+header ul {
+   list-style: none;
+   padding: 0;
+}
+
+header li {
+   display: inline;
+   margin-right: 20px;
+   font-weight: bold;
+}
+
+main {
+   margin-top: 60px;
+   display: grid;
+   grid-template-columns: 50% 50%;
+   grid-gap: 20px;
+   width: 100%;
+   max-width: 100%;
+   padding: 20px;
+   overflow-x: hidden;
+}
+.Product input{
+    width: 89%;
+    height: 35px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: x-large;
+    justify-content: center;
+    align-items: center;
+ }
+
+ .CategoryName input{
+   width: 89%;
+   height: 35px;
+   margin-bottom: 10px;
+   margin-left: 5px;
+   font-weight: bold;
+   font-size: x-large;
+}
+ .SubIs {
+  display: flex;
+  margin-left: 5px;
+ }
+ .SubIs2 {
+   display: flex;
+  align-items: center;
+  justify-content: center;
+  }
+ #amount{
+   height: 35px;
+   font-size: large;
+   width: 80%;
+ }
+ #select-p{
+   margin-left: 5px;
+   margin-bottom: 10px;
+   height: 35px;
+   width: 90%;
+   max-width: 90%;
+   font-size: large;
+ }
+ #amount2{
+   margin-right: 10px;
+   height: 35px;
+   width: 80%;
+   font-size: large;
+ }
+ #tax{
+   margin-right: 10px;
+   height: 35px;
+   width: 80%;
+   font-size: large;
+ }
+ #category{
+   margin-right: 10px;
+   height: 35px;
+   width: 80%;
+   font-size: large;
+ }
+ #tax2{
+   margin-right: 10px;
+   padding-right: 155px;
+   height: 35px;
+   width: 80%;
+   font-size: large;
+ }
+ #price2{
+   margin-right: 10px;
+   height: 35px;
+   width: 80%;
+   font-size: large;
+ }
+ #price{
+   margin-right: 10px;
+   height: 35px;
+   width: 80%;
+   font-size: large;
+ }
+ #select-c{
+   margin-right: 10px;
+   height: 35px;
+   width: 100%;
+   max-width: 150px;
+   font-size: large;
+ }
+ 
+ .Add button{
+    margin-top: 15px;
+    width: 90%;
+    text-align: center;
+    background-color: mediumslateblue;
+    font-weight: bold;
+    margin-left: 5px;
+    padding: 10px;
+    font-size: large;
+    justify-content: center;
+    align-items: center;
+ }
+ .tableP {
+   max-width: 90%;
+   overflow-x: auto; 
+ }
+
+table {
+   border-collapse: collapse;
+   text-align: left;
+   width: 100%; 
+   max-width: 100%; 
+}
+
+table th, table td {
+   border-bottom: 1px solid;
+   padding: 5px;
+   font-size: x-large;
+   color: gray;
+   max-width: 200px; 
+   word-wrap: break-word; 
+   overflow: hidden; 
+}
+.Cancel{
+   position: sticky;
+   left: 40%;
+   bottom: 20px;
+   font: 200;
+   padding: 10px;
+   width: 180px;
+   border-radius: 10px;
+   font-weight: bold;
+   margin-top: 10px;
+}
+#finish{
+   position: sticky;
+   left: 65%;
+   bottom: 20px;
+   font: 200;
+   padding: 10px;
+   width: 180px;
+   font-weight: bold;
+   border-radius: 10px;
+   margin-top: 10px;
+   background-color: mediumslateblue;
+}
+.Voltar button{
+   position: absolute;
+   left: 85%;
+   bottom: 20px;
+   font: 200;
+   padding: 10px;
+   width: 180px;
+   font-weight: bold;
+   border-radius: 10px;
+   background-color: mediumslateblue;
+}
+.subI{
+   width: 30%;
+}
+
+#ccollun{
+   border-left: 1px solid;
+   border-top: 1px solid;
+   border-right: 1px solid;
+   padding: 5px;
+   width: 25px;
+   font-size: x-large;
+   color: gray;
+}
+#ccollun2{
+   border-left: 1px solid;
+   padding: 5px;
+   font-size: x-large;
+   color: gray;}
+
+ #ccollun3{
+   border-left: 1px solid;
+   padding: 5px;
+   font-size: large;
+   color: gray;
+   border-right: 1px solid;
+ }
+
+#ccollun3 button{
+   padding: 5px;
+   width: 80px;
+   font-size: large;
+   border-right: 1px solid;
+   background-color: mediumslateblue;
+}
+#view{
+   width: 80px;
+   font-size: large;
+   margin-left: 10%;
+   border-right: 1px solid;
+   background-color: mediumslateblue;
+   max-width: 90%
+}
+
+#cancel{
+   bottom: 20px;
+   font: 200;
+   padding: 10px;
+   width: 180px;
+   font-weight: bold;
+   border-radius: 10px;
+   margin-top: 10px;
+   background-color: mediumslateblue;
+}
+#ccollun4 button{
+   padding: 5px;
+   width: 100px;
+   font-size: large;
+   background-color: darkgray;
+}
+
+#pcollun {
+   font-size: x-large;
+   color: gray;
+   border-left: 1px solid;
+   border-top: 1px solid;
+   border-right: 1px solid;
+   width: 10%;
+   max-width: 200px; 
+   word-wrap: break-word; 
+   overflow: hidden; 
+}
+#pcollun2{
+   font-size: large;
+   color: gray;
+   font-size: x-large;
+   border-right: 1px solid;
+   border-left: 1px solid;
+}
+
+#total{
+   bottom: 20px;
+   font-weight: bold;
+   margin-top: 20px;   
+   margin-bottom: 20px;
+   width: 70px;
+   position: sticky;
+}
+#IdTax{
+   position: absolute;
+   left: 85%;
+   bottom: 110px;
+   font-weight: bold;
+}
+.ProductAdd{
+   margin-right: 1px;
+}

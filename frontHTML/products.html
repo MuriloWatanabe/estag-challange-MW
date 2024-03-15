@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Suite Store</title>
+</head>
+<header>
+    <h1>Suite Store</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="history.html">History</a></li>
+        </ul>
+    </nav>
+</header>
+
+<body>
+    <main>
+        <form form onsubmit="postProd(event)" id="prodForm">
+            <div class="ProductAdd">
+                <div class="Product">
+                    <input type="text" maxlength="30" placeholder="Product Name" id="product2" name="productN"
+                    >
+                </div>
+                <div class="SubIs2">
+                    <div><input type="number" id="amount2" name="amountP" placeholder="Amount" min="1"
+                            oninput="this.value = Math.abs(this.value)"></div>
+                    <div><input type="number" id="price" name="priceP" placeholder="Unit Price" step="0.1"></div>
+                    <div><select name="label" id="select-c">
+                            <option disabled selected hidden>Categories</option>
+                        </select></div>
+                </div>
+                <div class="Add">
+                    <button type="submit">Add Category</button>
+                </div>
+            </div>
+            </div>
+        </form>
+        <div class="tableP">
+            <table>
+                <tr>
+                    <th class="hometh" id="ccollun"><b>Code</b></th>
+                    <th class="hometh" id="ccollun"><b>Product</b></th>
+                    <th class="hometh" id="ccollun"><b>Amount</b></th>
+                    <th class="hometh" id="ccollun"><b>Unit price</b></th>
+                    <th class="hometh" id="ccollun"><b>Category</b></th>
+                    <th class="hometh" id="ccollun"><b>Options</b></th>
+                </tr>
+                <tbody class="tbody"></tbody>
+            </table>
+        </div>
+        <script>
+
+async function postProd(event){
+        event.preventDefault()
+        const prod = new FormData(document.getElementById('prodForm'))
+        const response = await fetch("http://localhost/routes/product.php", {
+            method: 'POST',
+            body: prod
+        },
+        // window.location.reload()
+        )
+}
+
+            // function removeSpecialCharFromString(str) {
+            //     return str.replace(/[<^>\\""//]/, '');
+            // }
+
+            // function removeSpecialCharacters(input) {
+            //     input.value = input.value.replace(/[<>^\\]/, '');
+            // }
+            function renderCategories() {
+                fetch('http://localhost/routes/categories.php', { method: 'GET' })
+                    .then(response => response.json())
+                    .then(data => {
+                        
+                        const select = document.getElementById('select-c');
+                        data.forEach(label => {
+                            const option = document.createElement('option');
+                            option.value = JSON.stringify(label[0]);
+                            option.innerText = label.name;
+                            select.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Erro ao buscar categorias:', error));
+            }
+            renderCategories()
+
+            function renderItem() {
+                
+                fetch('http://localhost/routes/product.php', { method: 'GET' })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        let table = document.querySelector('.tbody');
+                        data.forEach(product => {
+                            let tr = document.createElement('tr');
+                            tr.innerHTML = `
+                    <td class="hometd" id="ccollun">${product[0]}</td>
+                    <td class="hometd" id="ccollun">${product[1]}</td> 
+                    <td class="hometd" id="ccollun">${product.amount}</td>
+                    <td class="hometd" id="ccollun">${product.price}</td>
+                    <td class="hometd" id="ccollun">${product.name}</td>
+                    <td class="hometd" id="ccollun3">
+                        <button class="delete-btn" data-code="${product[0]}">Delete</button>
+                    </td>`;
+                            table.append(tr);
+                        });
+                        addDeleteEventListeners();
+                    })
+            }
+
+            function addDeleteEventListeners() {
+    let deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            let code = button.dataset.code;
+            console.log(code)
+fetch(`http://localhost/routes/product.php?code=${code}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Produto excluído com sucesso');
+                   
+                        // window.location.reload();
+                    } else {
+                        console.error('Erro ao excluir produto:', response.statusText);
+                    }
+                })
+                .catch(error => console.error('Erro ao excluir produto:', error));
+        });
+    });
+}
+
+            
+            renderItem()
+        </script>
+</body>
+
+</html>

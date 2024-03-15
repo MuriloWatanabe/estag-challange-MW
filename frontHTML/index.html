@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Suite Store</title>
+</head>
+<header>
+    <h1>Suite Store</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="history.html">History</a></li>
+        </ul>
+    </nav>
+</header>
+
+<body>
+    <main>
+        <div class="ProductAdd">
+            <div class="Product">
+                <div>
+                    <select name="productHome" id="select-p" onchange="associaInput()">
+                        <option disabled selected hidden>Product</option>
+                    </select>
+                </div>
+            </div>
+            <div class="SubIs">
+                <div><input type="number" id="amount" name="amountcart" placeholder="Amount"></div>
+                <div><input type="number" id="tax" name="taxcart" placeholder="Tax" readonly></div>
+                <div><input type="text" id="price2" name="pricecart" placeholder="Price" readonly></div>
+                <div hidden id="total" name="total"></div>
+            </div>
+            <div class="Add">
+                <button type="submit" onclick="addToLocalStorage()">Add Cart</button>
+            </div>
+        </div>
+        <div class="tableP">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="hometh" id="ccollun"><b>Product Code</b></th>
+                        <th class="hometh" id="ccollun"><b>Product</b></th>
+                        <th class="hometh" id="ccollun"><b>Amount</b></th>
+                        <th class="hometh" id="ccollun"><b>Price</b></th>
+                        <th class="hometh" id="ccollun"><b>Tax</b></th>
+                        <th class="hometh" id="ccollun"><b>Total</b></th>
+                        <th class="hometh" id="ccollun"><b>Action</b></th>
+                    </tr>
+                </thead>
+                <tbody id="productList"></tbody>
+            </table>
+
+            <div>
+                <label>Total: <input type="number" disabled value="" id="totalInput"></label>
+            </div>
+            <div>
+                <label>Tax: <input type="number" disabled value="" id="totalTax"></label>
+            </div>
+                <div>
+                    <button id="cancel" onclick="cancelOrder()">Cancel</button>
+                </div>
+                <div>
+                    <button id="finish" onclick="finishOrder()">Finish</button>
+                </div>
+        </div>
+        <script>
+          
+            document.addEventListener('DOMContentLoaded', function () {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.forEach(item => renderItem(item));
+                calculateTotal();
+            });
+
+            function renderCart(product) {
+                fetch('http://localhost/routes/product.php', { method: 'GET' })
+                    .then(response => response.json()).then(data => {
+                        var select = document.getElementById('select-p');
+                        data.forEach(product => {
+                            var num = select.childElementCount + 1
+                            var option = document.createElement("option");
+                            option.setAttribute('id', num)
+                            option.value = JSON.stringify(product);
+
+                            console.log(product[1])
+
+                            select.appendChild(option);
+                            option.innerText = JSON.stringify(product[1]).replace(/"/g, "");
+                        });
+                    })
+                    .catch(error => console.error('Erro ao buscar categorias:', error));
+            }
+            renderCart()
+
+            function associaInput() {
+                const amountInput = document.getElementById("amount").value;
+                const selectedAmount = parseInt(amountInput);
+                const Pptc = document.getElementById("select-p").value;
+                const Nproduct = JSON.parse(Pptc);
+
+                console.log(Nproduct)
+
+                if (selectedAmount > Nproduct.amount) {
+                    alert("Quantidade selecionada excede a quantidade disponível do produto.");
+                    amountInput.value = Nproduct.amount;
+                }
+
+                const tax2 = Nproduct.tax || 0;
+                const price2 = Nproduct.price || 0;
+                document.getElementById('price2').value = `${price2}`;
+                document.getElementById('tax').value = `${tax2}`;
+
+                if (selectedAmount === Nproduct.amount) {
+                    let products = JSON.parse(localStorage.getItem('Products')) || [];
+                    products.forEach(product => {
+                        if (product.product === Nproduct.product) {
+                            product.amount = 0;
+                        }
+                    });
+                    localStorage.setItem('Products', JSON.stringify(products));
+                }
+            }
+
+
+
+            function addToLocalStorage() {
+                const amount = parseInt(document.getElementById("amount").value);
+                const tax = parseFloat(document.getElementById("tax").value);
+                const price = parseFloat(document.getElementById("price2").value);
+                const Pptc = document.getElementById("select-p").value;
+                const Nproduct = JSON.parse(Pptc);
+
+                console.log(Nproduct)
+
+                const total = (price * amount) * (1 + (tax / 100));
+
+                const cartItem = { amount, price, tax, total, Nproduct };
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.push(cartItem);
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+                renderItem(cartItem);
+                calculateTotal();
+                getTotalTax();
+            }
+
+            function renderItem(item) {
+                let table = document.getElementById('productList');
+                let tr = document.createElement('tr');
+                console.log(item)
+                tr.innerHTML = `
+                    <td class="hometd" id="ccollun" name="idproduct">${item.Nproduct[0]}</td>
+                    <td class="hometd" id="ccollun">${item.Nproduct[1]}</td>
+                    <td class="hometd" id="ccollun">${item.amount}</td>
+                    <td class="hometd" id="ccollun">${item.price}</td>
+                    <td class="hometd" id="ccollun">${item.tax}%</td>
+                    <td class="hometd" id="ccollun" name="total">${item.total.toFixed(2)}</td>
+                    <td class="hometd" id="ccollun"><button onclick='removeItem(this)' id='delete'>Delete</button></td>`;
+                table.appendChild(tr);
+            }
+
+            function removeItem(button) {
+                let row = button.parentNode.parentNode;
+                let productName = row.cells[0].innerText;
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let newCart = cart.filter(item => item.productId !== productName);
+                localStorage.setItem('cart', JSON.stringify(newCart));
+                row.remove();
+                calculateTotal();
+            }
+
+            function cancelOrder() {
+                localStorage.removeItem('cart');
+                document.getElementById('productList').innerHTML = '';
+                document.getElementById('total').innerText = '';
+                document.getElementById('totalInput').value = '';
+                document.getElementById('totalTax').value = '';
+            }
+
+            function getTotalTax() {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let totalTax = 0;
+
+                cart.forEach(item => {
+                    let itemTax = (item.price * item.amount * item.tax) / 100;
+                    totalTax += itemTax;
+                });
+
+                return totalTax.toFixed(2);
+            }
+
+            function calculateTotal() {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let total = 0;
+                let totalTax = 0;
+
+                cart.forEach(item => {
+                    total += item.total;
+                    totalTax += (item.price * item.amount * item.tax) / 100;
+                });
+
+                // document.getElementById('tax').value = totalTax.toFixed(2);
+                // document.getElementById('total').value = total;
+
+                document.getElementById('totalInput').value = total.toFixed(2);
+                document.getElementById('totalTax').value = totalTax.toFixed(2);
+            }
+            async function order() {
+                cart = JSON.parse(localStorage.getItem('cart'))
+                calculateTotal()
+                getTotalTax()
+                let getTotal = document.getElementById('totalInput').value;
+                let getTax = document.getElementById('totalTax').value;
+                console.log(getTotal, getTax)
+                var data = new FormData()
+                data.append("code", Math.floor(Math.random() * 10000))
+                data.append("total", getTotal)
+                data.append("tax", getTax)
+                let request = fetch(`http://localhost/routes/order.php`, {
+                    method: 'POST',
+                    body: data,
+                }).then((res) => {
+                    return res.json()
+                })
+                
+                return request
+            }
+            async function order_item() {
+                let code = await order()
+                cart = JSON.parse(localStorage.getItem('cart'))
+                console.log(cart)
+                //order_code, product_code, amount, price, tax
+
+                cart.forEach(async (produto)=> {
+                    let data = new FormData();
+                    console.log(produto.Nproduct.code)
+                    data.append("order_code", code.code);
+                    data.append("product_code", produto.Nproduct[0]);
+                    data.append("amount", produto.amount);
+                    data.append("price", produto.price);
+                    data.append("tax", produto.tax);
+                    
+                    console.log("AQUIII")
+                    let request = await fetch(`http://localhost/routes/order_item.php`, {
+                    method: 'POST',
+                    body: data,
+                    }).then(async (s) => {
+                        console.log(await s.text())
+                    })
+                })
+
+            }
+
+
+
+            function finishOrder() {
+                order_item()
+            }
+        </script>
+
+</body>
+
+</html>

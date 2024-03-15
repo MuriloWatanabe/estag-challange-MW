@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Suite Store</title>
+
+</head>
+<header>
+    <h1>Suite Store</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="history.html">History</a></li>
+        </ul>
+    </nav>
+</header>
+
+<body>
+    <main>
+        <form onsubmit="postCat(event)" id="categoryForm">
+
+            <div class="CNAdd">
+                <div class="CategoryName">
+                    <input type="text" maxlength="30" id="ctt" name="name" placeholder="Category Name">
+                </div>
+                <div class="SubIs">
+                    <div><input type="number" name="tax" id="ctt2" placeholder="Tax" min="1"></div>
+                </div>
+                <div class="Add">
+                    <button type="submit" onClick="window.location.href=window.location.href">Add Category</button>
+                </div>
+            </div>
+            </div>
+
+        </form>
+
+        <div class="tableP">
+            <table>
+                <tr>
+                    <th class="hometh" id="ccollun"><b>Code</b></th>
+                    <th class="hometh" id="ccollun"><b>Category</b></th>
+                    <th class="hometh" id="ccollun"><b>Tax</b></th>
+                    <th class="hometh" id="ccollun"><b>Options</b></th>
+                </tr>
+                <tbody class="tbody">
+
+                </tbody>
+            </table>
+        </div>
+        <script>
+
+async function postCat(event){
+        event.preventDefault()
+        const category = new FormData(document.getElementById('categoryForm'))
+        const response = await fetch("http://localhost/routes/categories.php", {
+            method: 'POST',
+            body: category
+        },
+        window.location.reload()
+        )
+}
+
+            function removeSpecialCharacters(input) {
+        document.getElementById("name").onkeypress = function(e) {
+         var chr = String.fromCharCode(e.which);
+         if ("1234567890qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM".indexOf(chr) < 0)
+           return false;
+       };
+            }
+            function removeSpecialCharFromString(str) {
+                return str.replace(/[<^>\\""//]/, '');
+            }
+            // function addNewCategory() {
+            //     document.getElementById('formCategory').addEventListener('submit', async event => {
+            //         event.preventDefault();
+            //         const data = new FormData(formCategory);
+            //         try {
+            //             const res = await fetch('http://localhost/routes/categories.php', {
+            //                 method: 'POST',
+            //                 body: data
+            //             });
+            //             const response = await res.text();
+            //             if (response === "success") {
+            //                 alert("Categoria adicionada com sucesso!");
+            //                 document.getElementById('ctt').value = "";
+            //                 document.getElementById('ctt2').value = "";
+            //                 getItems();
+            //             } else {
+            //                 alert("Erro ao adicionar categoria: " + response);
+            //             }
+            //         } catch (error) {
+            //             console.log(error.message);
+            //         }
+            //     });
+            // }
+
+            function renderItem() {
+                let table = document.querySelector('tbody');
+                fetch('http://localhost/routes/categories.php', { method: 'GET' })
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(category => {
+                            var specialCharsRegex = /[!@#$%^&*()_{}\[\]:;<>,.?~]/;
+                            if (specialCharsRegex.test(category.name)) {
+                             return;
+                }
+                            let tr = document.createElement('tr');
+                            tr.innerHTML = `
+                    <td class="hometd" id="ccollun">${category.code}</td>
+                    <td class="hometd" id="ccollun">${category.name}</td>
+                    <td class="hometd" id="ccollun">${category.tax}%</td>
+                    <td class="hometd" id="ccollun3">
+                        <button class="delete-btn" data-code="${category.code}">Delete</button>
+                    </td>`;
+                            table.append(tr);
+                        });
+                        addDeleteEventListeners();
+                    })
+                    .catch(error => console.error('Erro ao buscar categorias:', error));
+            }
+
+            function addDeleteEventListeners() {
+                let deleteButtons = document.querySelectorAll('.delete-btn');
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        let code = button.dataset.code;
+                        console.log(code)
+                        fetch(`http://localhost/routes/categories.php?code=${code}`, { method: 'DELETE' })
+                            .then(response => {
+                                if (response.ok) {
+                                    console.log('Categoria excluída com sucesso');
+                                } else {
+                                    console.error('Erro ao excluir categoria:', response.statusText);
+                                }
+                            })
+                            .catch(error => console.error('Erro ao excluir categoria:', error));
+                    });
+                });
+            }
+
+            renderItem()
+
+            // getItems();
+        </script>
+    </main>
+</body>
+
+</html>

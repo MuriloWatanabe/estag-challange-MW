@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Suite Store</title>
+
+</head>
+<header>
+    <h1>Suite Store</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="history.html">History</a></li>
+        </ul>
+    </nav>
+</header>
+
+<body>
+    <main>
+        <div class="gridArea1">
+            <table>
+                <thead>
+                    <td id="ccollun">Code</td>
+                    <td id="ccollun">Tax</td>
+                    <td id="ccollun">Total</td>
+                    <td id="ccollun">Action</td>
+                </thead>
+                <tbody id="list-sales">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="tableP">
+            <table>
+                <tr>
+                    <td id="ccollun">Product</td>
+                    <td id="ccollun">Unit price</td>
+                    <td id="ccollun">Product Tax</td>
+                    <td id="ccollun">Amount</td>
+                </tr>
+                <tbody id="tbody">
+                </tbody>
+            </table>
+            <div id="sale-details" class="prices">
+
+            </div>
+        </div>
+        <script>
+            function renderItem() {
+                let table = document.getElementById('list-sales');
+                fetch('http://localhost/routes/order.php', { method: 'GET' })
+                    .then(response => response.json())
+                    .then(data  => {
+                        data.forEach(order => {
+                                let tr = document.createElement('tr');
+                                tr.innerHTML = `
+                        <td id="ccollun">${order.code}</td>
+                        <td id="ccollun">${order.tax}</td>
+                        <td id="ccollun">${order.total}</td>
+                        <td id="ccollun"><button onclick="showSaleDetails(${order.code})">VIEW</button></td>
+                    `;
+                    table.appendChild(tr);
+            });
+                    });
+            }
+
+            function showSaleDetails(code) {
+                let table = document.getElementById('tbody');
+                table.innerHTML = ''
+                fetch(`http://localhost/routes/order_item.php?order_code=${code}`, { method: 'GET' })
+                    .then(response => response.json())
+                    .then(data => {
+
+                        let viewP = data
+                        let FilterView = viewP.filter((item) => item.code == code)
+                        FilterView.forEach(item => {
+                            let tr = document.createElement('tr');
+                            tr.innerHTML = `
+                <td id="ccollun">${item.name}</td>
+                    <td id="ccollun">${item.price}</td>
+                    <td id="ccollun">${item.tax}</td>
+                    <td id="ccollun">${item.amount}</td>
+                `;
+                            table.appendChild(tr);
+                        });
+                    });
+            }
+
+            renderItem();
+        </script>
+    </main>
+
+</body>
+
+</html>
