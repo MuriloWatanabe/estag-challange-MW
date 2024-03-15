@@ -61,15 +61,16 @@
             <div>
                 <label>Tax: <input type="number" disabled value="" id="totalTax"></label>
             </div>
-                <div>
-                    <button id="cancel" onclick="cancelOrder()">Cancel</button>
-                </div>
-                <div>
-                    <button id="finish" onclick="finishOrder()">Finish</button>
-                </div>
+            <div>
+                <button id="cancel" onclick="cancelOrder()">Cancel</button>
+            </div>
+            <div>
+                <button id="finish" onclick="finishOrder()">Finish</button>
+            </div>
         </div>
         <script>
-          
+
+
             document.addEventListener('DOMContentLoaded', function () {
                 let cart = JSON.parse(localStorage.getItem('cart')) || [];
                 cart.forEach(item => renderItem(item));
@@ -95,6 +96,7 @@
                     .catch(error => console.error('Erro ao buscar categorias:', error));
             }
             renderCart()
+
 
             function associaInput() {
                 const amountInput = document.getElementById("amount").value;
@@ -134,6 +136,13 @@
                 const Pptc = document.getElementById("select-p").value;
                 const Nproduct = JSON.parse(Pptc);
 
+                if (parseInt(amount) > Nproduct.amount) {
+                    alert("Selected quantity exceeds available quantity of the product.");
+                    return;
+                }
+
+
+
                 console.log(Nproduct)
 
                 const total = (price * amount) * (1 + (tax / 100));
@@ -146,6 +155,19 @@
                 renderItem(cartItem);
                 calculateTotal();
                 getTotalTax();
+            }
+
+            function updateAmountHome(){
+                let products = fetch(`http://localhost/routes/product.php`, {
+                    method: "POST",
+                    body: data,
+                });
+                products.forEach(product => {
+                    if (product.product === Nproduct.product) {
+                        product.amount -= amount;
+                    }
+                });
+
             }
 
             function renderItem(item) {
@@ -226,7 +248,7 @@
                 }).then((res) => {
                     return res.json()
                 })
-                
+
                 return request
             }
             async function order_item() {
@@ -235,7 +257,7 @@
                 console.log(cart)
                 //order_code, product_code, amount, price, tax
 
-                cart.forEach(async (produto)=> {
+                cart.forEach(async (produto) => {
                     let data = new FormData();
                     console.log(produto.Nproduct.code)
                     data.append("order_code", code.code);
@@ -243,11 +265,11 @@
                     data.append("amount", produto.amount);
                     data.append("price", produto.price);
                     data.append("tax", produto.tax);
-                    
+
                     console.log("AQUIII")
                     let request = await fetch(`http://localhost/routes/order_item.php`, {
-                    method: 'POST',
-                    body: data,
+                        method: 'POST',
+                        body: data,
                     }).then(async (s) => {
                         console.log(await s.text())
                     })
@@ -259,6 +281,7 @@
 
             function finishOrder() {
                 order_item()
+                updateAmountHome()
             }
         </script>
 

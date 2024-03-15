@@ -60,8 +60,8 @@
                                 let tr = document.createElement('tr');
                                 tr.innerHTML = `
                         <td id="ccollun">${order.code}</td>
-                        <td id="ccollun">${order.tax}</td>
-                        <td id="ccollun">${order.total}</td>
+                        <td id="ccollun">R$${order.tax}</td>
+                        <td id="ccollun">R$${order.total}</td>
                         <td id="ccollun"><button onclick="showSaleDetails(${order.code})">VIEW</button></td>
                     `;
                     table.appendChild(tr);
@@ -83,8 +83,8 @@
                             tr.innerHTML = `
                 <td id="ccollun">${item.name}</td>
                     <td id="ccollun">${item.price}</td>
-                    <td id="ccollun">${item.tax}</td>
-                    <td id="ccollun">${item.amount}</td>
+                    <td id="ccollun">${item[5]}%</td>
+                    <td id="ccollun">${item[3]}</td>
                 `;
                             table.appendChild(tr);
                         });
