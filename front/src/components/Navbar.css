@@ -1,0 +1,36 @@
+nav {
+    background-color: mediumslateblue;
+    color: white;
+    padding: 5px 50px;
+    top: 0;
+    max-width: 100%;
+    z-index: 1000
+ }
+nav a {
+    text-decoration: none;
+    color: white;
+ }
+ 
+nav ul {
+    list-style: none;
+    padding: 0;
+ }
+ 
+nav li {
+    display: inline;
+    margin-right: 20px;
+    font-weight: bold;
+ } 
+ 
+ .Add button{
+    margin-top: 15px;
+    width: 90%;
+    text-align: center;
+    background-color: mediumslateblue;
+    font-weight: bold;
+    margin-left: 5px;
+    padding: 10px;
+    font-size: large;
+    justify-content: center;
+    align-items: center;
+ }

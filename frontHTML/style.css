@@ -35,6 +35,16 @@ header li {
    font-weight: bold;
 }
 
+.Product input{
+   width: 89%;
+   height: 35px;
+   margin-bottom: 10px;
+   margin-left: 5px;
+   font-weight: bold;
+   font-size: x-large;
+   justify-content: center;
+   align-items: center;
+}
 main {
    margin-top: 60px;
    display: grid;
@@ -45,16 +55,6 @@ main {
    padding: 20px;
    overflow-x: hidden;
 }
-.Product input{
-    width: 89%;
-    height: 35px;
-    margin-bottom: 10px;
-    margin-left: 5px;
-    font-weight: bold;
-    font-size: x-large;
-    justify-content: center;
-    align-items: center;
- }
 
  .CategoryName input{
    width: 89%;
