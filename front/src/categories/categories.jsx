@@ -16,6 +16,7 @@ function CategoriesManagement() {
     try {
 const response = await fetch("http://localhost/routes/categories.php", {
         method: 'POST',
+        body: formData
       });
       if (response.ok) {
         alert("Categoria adicionada com sucesso!");
@@ -80,7 +81,7 @@ const response = await fetch(`http://localhost/routes/categories.php?code=${code
                 <div className="Add">
                 <button type="submit">Adicionar Categoria</button>
                 </div>
-        </form>
+      </form>
      </div>
       <div className="tableP">
       <h1>Categorias</h1>

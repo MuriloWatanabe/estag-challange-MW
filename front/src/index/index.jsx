@@ -8,6 +8,7 @@ function SuiteStore() {
     const [price, setPrice] = useState('');
     const [total, setTotal] = useState('');
     const [totalTax, setTotalTax] = useState('');
+
  
     useEffect(() => {
         fetchProducts();
@@ -55,13 +56,18 @@ fetch('http://localhost/routes/product.php')
         getTotalTax();
     };
  
-    const calculateTotal = () => {
-        let total = 0;
-        cart.forEach(item => {
-            total += item.total;
-        });
-        setTotal(total.toFixed(2));
-    };
+    function calculateTotal() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let total = 0;
+      let totalTax = 0;
+
+      cart.forEach(item => {
+          total += item.total;
+          totalTax += (item.price * item.amount * item.tax) / 100;
+      });
+      document.getElementById('totalInput').value = total.toFixed(2);
+      document.getElementById('totalTax').value = totalTax.toFixed(2);
+  }
  
     const getTotalTax = () => {
         let totalTax = 0;
@@ -97,18 +103,18 @@ await fetch(`http://localhost/routes/order_item.php`, {
     };
  
     const order = async () => {
-        const getTotal = total;
-        const getTax = totalTax;
-        const data = new FormData();
-        data.append("code", Math.floor(Math.random() * 10000));
-        data.append("total", getTotal);
-        data.append("tax", getTax);
-const response = await fetch(`http://localhost/routes/order.php`, {
-            method: 'POST',
-            body: data,
-        });
-        return await response.json();
-    };
+      const getTotal = parseFloat(document.getElementById("totalInput").value);
+      const getTax = parseFloat(document.getElementById("totalTax").value);
+      const data = new FormData();
+      data.append("code", Math.floor(Math.random() * 10000));
+      data.append("total", getTotal);
+      data.append("tax", getTax);
+  const response = await fetch(`http://localhost/routes/order.php`, {
+          method: 'POST',
+          body: data,
+      });
+      return await response.json();
+  };
  
     const handleProductChange = (e) => {
         const selectedProduct = JSON.parse(e.target.value);
@@ -121,6 +127,14 @@ setTax(selectedProduct.tax);
             <option key={index} value={JSON.stringify(product)}>{product[1]}</option>
         ));
     };
+
+    function cancelOrder() {
+      localStorage.removeItem('cart');
+      document.getElementById('productList').innerHTML = '';
+      document.getElementById('total').innerText = '';
+      document.getElementById('totalInput').value = '';
+      document.getElementById('totalTax').value = '';
+  }
  
     return (
         <div>
@@ -172,13 +186,13 @@ setTax(selectedProduct.tax);
                         </tbody>
                     </table>
                     <div>
-                        <label>Total: <input type="number" disabled value={total} id="totalInput" /></label>
-                    </div>
+                <label>Total: <input type="number" disabled id="totalInput"/></label>
+            </div>
+            <div>-
+                <label>Tax: <input type="number" disabled id="totalTax"/></label>
+            </div>
                     <div>
-                        <label>Tax: <input type="number" disabled value={totalTax} id="totalTax" /></label>
-                    </div>
-                    <div>
-                        <button id="cancel">Cancel</button>
+                        <button id="cancel" onClick={cancelOrder}>Cancel</button>
                     </div>
                     <div>
                         <button id="finish" onClick={finishOrder}>Finish</button>
