@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './categories.css'
+import TableCategories from '../components/Tables/tablecategories';
 
 function CategoriesManagement() {
   const [name, setName] = useState('');
@@ -15,7 +16,6 @@ function CategoriesManagement() {
     try {
 const response = await fetch("http://localhost/routes/categories.php", {
         method: 'POST',
-        body: formData
       });
       if (response.ok) {
         alert("Categoria adicionada com sucesso!");
@@ -68,21 +68,21 @@ const response = await fetch(`http://localhost/routes/categories.php?code=${code
   return (
 <>
     <main>
-    <div class="CNAdd">   
+    <div className="CNAdd">   
       <h1>Adicionar Categoria</h1>
       <form onSubmit={handleSubmit}>
-      <div class="CategoryName">
+      <div className="CategoryName">
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nome da Categoria" />
         </div>
-        <div class="SubIs">
+        <div className="SubIs">
                     <div><input type="number" value={tax} onChange={(e) => setTax(e.target.value)} placeholder="Taxa (%)" /></div>
                 </div>
-                <div class="Add">
+                <div className="Add">
                 <button type="submit">Adicionar Categoria</button>
                 </div>
-      </form>
+        </form>
      </div>
-      <div class="tableP">
+      <div className="tableP">
       <h1>Categorias</h1>
       <table>
         <thead>
@@ -94,16 +94,7 @@ const response = await fetch(`http://localhost/routes/categories.php?code=${code
           </tr>
         </thead>
         <tbody>
-          {categories.map(category => (
-            <tr key={category.code}>
-              <td>{category.code}</td>
-              <td>{category.name}</td>
-              <td>{category.tax}%</td>
-              <td>
-                <button  id='delete' onClick={() => handleDelete(category.code)}>Excluir</button>
-              </td>
-            </tr>
-          ))}
+            <TableCategories/>
         </tbody>
       </table>
     </div>

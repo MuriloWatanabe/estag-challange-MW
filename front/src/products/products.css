@@ -1,4 +1,40 @@
 
+html {
+    height: 100%;
+ }
+ 
+ body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+ }
+ 
+ header {
+    background-color: mediumslateblue;
+    color: white;
+    padding: 5px 50px;
+    top: 0;
+    max-width: 100%;
+    z-index: 1000
+ }
+ 
+ header a {
+    text-decoration: none;
+    color: white;
+ }
+ 
+ header ul {
+    list-style: none;
+    padding: 0;
+ }
+ 
+ header li {
+    display: inline;
+    margin-right: 20px;
+    font-weight: bold;
+ }
+ 
  .Product input{
     width: 89%;
     height: 35px;
@@ -20,6 +56,18 @@
     overflow-x: hidden;
  }
  
+  .CategoryName input{
+    width: 89%;
+    height: 35px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: x-large;
+ }
+  .SubIs {
+   display: flex;
+   margin-left: 5px;
+  }
   .SubIs2 {
     display: flex;
    align-items: center;
@@ -246,4 +294,13 @@
  .ProductAdd{
     margin-right: 1px;
  }
- 
+ .delete{
+    bottom: 20px;
+    font: 200;
+    padding: 10px;
+    width: 180px;
+    font-weight: bold;
+    border-radius: 10px;
+    margin-top: 10px;
+    background-color: mediumslateblue;
+ }
